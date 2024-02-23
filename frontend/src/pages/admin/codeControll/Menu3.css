@@ -1,0 +1,30 @@
+.App {
+    text-align: center;
+  }
+  
+  .form-container {
+    display: inline-block;
+    text-align: left;
+    margin-top: 20px;
+  }
+  
+  .form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .buttons button {
+    margin-left: 10px;
+  }
+  
+  form > label {
+    display: block;
+    margin-bottom: 15px;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    margin-left: 10px;
+  }
