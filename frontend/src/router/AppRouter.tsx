@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from '../App';
-import Menu1 from '../pages/Menu1';
-import Menu2 from '../pages/Menu2';
-import Menu3 from '../pages/Menu3';
+import Menu1 from '../pages/admin/authority/Menu1';
+import Menu2 from '../pages/admin/authorityMenu/Menu2';
+import Menu3 from '../pages/admin/codeControll/Menu3';
 import Home from '../pages/Home';
 
 const router = createBrowserRouter([
