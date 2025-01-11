@@ -11,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
@@ -27,30 +26,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-        .csrf(csrf -> csrf
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        .csrf(csrf -> csrf.disable()
         )
         .cors(cors -> cors.configurationSource(request -> {
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.addAllowedOrigin("http://localhost:3000"); // 클라이언트 도메인
-            configuration.addAllowedMethod("*"); // 모든 메서드 허용
-            configuration.addAllowedHeader("*"); // 모든 헤더 허용
-            configuration.setAllowCredentials(true); // 쿠키 허용
+            configuration.addAllowedOrigin("http://localhost:3000");
+            configuration.addAllowedMethod("*");
+            configuration.addAllowedHeader("*");
+            configuration.setAllowCredentials(true);
             return configuration;
         }))
         .sessionManagement(session -> session
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT는 세션을 사용하지 않음
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll() // 로그인, 회원가입 등 인증 관련 경로는 누구나 접근 가능
             .requestMatchers("/menus", "/api/users").authenticated() // 특정 경로는 인증 필요
             .anyRequest().permitAll() // 나머지 요청은 접근 허용
         )
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .headers(headers -> headers
             .contentSecurityPolicy(csp -> csp
                 .policyDirectives("default-src 'self'; script-src 'self'; style-src 'self';")
-                .reportOnly() // 실제 적용
             )
             .addHeaderWriter((request, response) -> 
                 response.addHeader("X-XSS-Protection", "1; mode=block")

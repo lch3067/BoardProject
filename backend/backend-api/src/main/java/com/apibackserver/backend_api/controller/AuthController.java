@@ -4,7 +4,6 @@ import com.apibackserver.backend_api.service.UserService;
 import com.apibackserver.backend_api.util.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.http.HttpHeaders;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,12 +31,11 @@ public class AuthController {
 
              // 헤더에 토큰 추가
             HttpHeaders headers = new HttpHeaders();
-
             headers.set("Authorization", "Bearer " + accessToken);
             headers.set("Refresh-Token", refreshToken);
             headers.set("access_expires_in", String.valueOf(jwtUtil.getAccessTokenExpirationTimeInSeconds()));
             headers.set("refresh_expires_in", String.valueOf(jwtUtil.getRefreshTokenExpirationTimeInSeconds()));
-            
+
             // 응답 본문
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("success", true);
@@ -58,7 +56,7 @@ public class AuthController {
     public ResponseEntity<?> refresh(@RequestBody Map<String, String> requestBody) {
         String refreshToken = requestBody.get("refresh_token");
 
-        if (refreshToken == null || jwtUtil.isTokenExpired(refreshToken, false)) {
+        if (refreshToken == null || jwtUtil.validateToken(refreshToken, false)) {
             return ResponseEntity.status(401).body(Map.of(
                 "success", false,
                 "message", "Refresh Token is invalid or expired"
@@ -87,7 +85,7 @@ public class AuthController {
         String token = authorizationHeader.substring(7); // "Bearer " 제거
 
         // 토큰 만료 여부 확인
-        if (jwtUtil.isTokenExpired(token, true)) {
+        if (jwtUtil.validateToken(token, true)) {
             return ResponseEntity.status(401).body(Map.of(
                 "success", false,
                 "message", "토큰이 이미 만료되었습니다."
