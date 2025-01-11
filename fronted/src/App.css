@@ -1,0 +1,70 @@
+.app {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.header {
+  padding: 1rem;
+  color: white;
+  text-align: center;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+
+}
+
+.main {
+  flex: 1;
+  background-color: #e9ecef;
+  padding: 1rem;
+  overflow-y: auto;
+  transition: margin-right 0.3s;
+
+}
+
+.footer {
+  position: relative;
+  background-color: #6c757d;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+.sidebar {
+  width: 600px;
+  transition: all 0.3s;
+  background-color: #ffffff;
+
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: width 1.5s;
+
+  box-shadow: 0px 4px 4px rgb(87, 85, 85); /* 가벼운 그림자 효과 */
+}
+
+.sidebar.collapsed {
+  width: 0px;
+}
+
+.toggle-btn {
+  position: absolute;
+  top: 400px;
+  right: -22px;
+  background: none;
+  border: none;
+  cursor: pointer; 
+  font-size: 1rem;
+  padding: 4px;
+  background-color: #ffffff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* main쪽 스타일 */
+.main-layout {
+  padding: 40px;
+  width: 100%;
+  background-color: #f9f9f9;
+}
