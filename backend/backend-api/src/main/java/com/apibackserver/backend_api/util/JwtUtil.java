@@ -25,10 +25,10 @@ public class JwtUtil {
     private Key accessTokenKey;
     private Key refreshTokenKey;
 
-    @Value("${jwt.access-token.expiration-time:120000}") // 기본값 6시간
+    @Value("${jwt.access-token.expiration-time:120000}")
     private long accessTokenExpiration;
     
-    @Value("${jwt.refresh-token.expiration-time:10800000}") // 기본값 7일
+    @Value("${jwt.refresh-token.expiration-time:10800000}")
     private long refreshTokenExpiration;
 
     @Value("${jwt.access-token.secret-key}")

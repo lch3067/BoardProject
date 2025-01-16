@@ -36,7 +36,6 @@ public class JwtAuthenticationFilter extends org.springframework.web.filter.Once
             @NonNull FilterChain chain
     ) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
-        String expiresInHeader = request.getHeader("Expires-In");
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.replace("Bearer ", "");
@@ -44,19 +43,6 @@ public class JwtAuthenticationFilter extends org.springframework.web.filter.Once
             try {
                 // Access Token 검증
                 Claims claims = jwtUtil.extractClaims(token, true);
-
-                            // 전달받은 만료 시간 확인
-                if (expiresInHeader != null) {
-                    long clientExpiresIn = Long.parseLong(expiresInHeader); // 클라이언트가 전달한 만료 시간 (초 단위)
-                    long currentTime = System.currentTimeMillis() / 1000; // 현재 시간 (초 단위)
-
-                    if (clientExpiresIn <= currentTime) {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        response.getWriter().write("Access Token expired based on provided expiration time");
-                        return;
-                    }
-                }
-
                 String username = claims.getSubject();
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -70,6 +56,7 @@ public class JwtAuthenticationFilter extends org.springframework.web.filter.Once
                         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     }
                 }
+                
             } catch (Exception e) {
                 logger.error("JWT validation failed: {}", e.getMessage());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

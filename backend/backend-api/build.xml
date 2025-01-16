@@ -1,0 +1,74 @@
+<project name="SpringBootBackend" default="deploy" basedir=".">
+ 
+ <!-- 애플리케이션 이름과 경로 설정 -->
+ <property name="app.name" value="backend-api" />
+ <property name="output.dir" value="C:/Users/lch30/Desktop/OUTPUT" />
+ <property name="build.dir" value="${basedir}/target" />
+ <property name="src.dir" value="${basedir}/src/main/java" />
+ <property name="resources.dir" value="${basedir}/src/main/resources" />
+ <property name="war.dir" value="${build.dir}/backend-api-0.0.1-SNAPSHOT" />
+
+ <!-- 클래스패스를 설정 -->
+ <path id="classpath">
+  <fileset dir="${build.dir}/backend-api-0.0.1-SNAPSHOT/WEB-INF/lib">
+   <include name="*.jar" />
+  </fileset>
+ </path>
+
+ <target name="init">
+  <tstamp />
+  <echo message="Initializing build process..." />
+ </target>
+
+ <!-- 필요한 디렉토리를 생성 -->
+ <target name="prepare" depends="init">
+  <echo message="Preparing directories for build..." />
+  <mkdir dir="${war.dir}/WEB-INF/classes" />
+  <mkdir dir="${war.dir}/WEB-INF/lib" />
+ </target>
+
+ <!-- 컴파일 및 리소스 복사 -->
+ <target name="build" depends="prepare">
+  <echo message="Compiling Java source files..." />
+  <javac srcdir="${src.dir}" destdir="${war.dir}/WEB-INF/classes" encoding="UTF-8" includeantruntime="false">
+   <classpath refid="classpath" />
+  </javac>
+  
+  <echo message="Copying resource files..." />
+  <copy todir="${war.dir}/WEB-INF/classes">
+   <fileset dir="${resources.dir}">
+    <include name="**/*" />
+   </fileset>
+  </copy>
+ </target>
+
+ <!-- 라이브러리 복사 -->
+ <target name="copy-libs" depends="build">
+  <echo message="Copying dependencies..." />
+  <copy todir="${war.dir}/WEB-INF/lib">
+   <fileset dir="${build.dir}/backend-api-0.0.1-SNAPSHOT/WEB-INF/lib">
+    <include name="*.jar" />
+   </fileset>
+  </copy>
+ </target>
+
+ <!-- WAR 파일 생성 -->
+ <target name="package" depends="copy-libs">
+  <echo message="Creating WAR file: ${app.name}.war..." />
+  <delete file="${output.dir}/${app.name}.war" />
+  <jar jarfile="${output.dir}/${app.name}.war">
+   <fileset dir="${war.dir}" />
+  </jar>
+ </target>
+
+ <!-- 필요 파일 복사 -->
+ <target name="deploy" depends="package">
+  <echo message="Copying files to output directory: ${output.dir}..." />
+  <copy todir="${output.dir}">
+   <fileset dir="${war.dir}/WEB-INF/classes">
+    <include name="**/*" />
+   </fileset>
+   <fileset dir="${war.dir}"/>
+  </copy>
+ </target>
+</project>
